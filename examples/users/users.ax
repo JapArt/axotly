@@ -1,0 +1,23 @@
+TEST GET user query
+  GET https://httpbin.org/get?name=Juan&role=base
+
+  EXPECT status == 200
+  EXPECT body.args.name == "Juan"
+  EXPECT body.args.role == "base"
+END
+
+TEST POST create a user
+  POST https://httpbin.org/post
+  Content-Type: application/json
+
+  BODY 
+  {
+    "name": "Axotly",
+    "role": "base"
+  }
+  BODYEND
+  
+  EXPECT status == 200
+  EXPECT body.args.name == "Axotly"
+  EXPECT body.args.role == "base"
+END

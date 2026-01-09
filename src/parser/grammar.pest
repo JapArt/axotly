@@ -1,0 +1,78 @@
+WHITESPACE = _{ " " | "\t" }
+NEWLINE    = _{ "\n" }
+
+file       = { SOI ~ (test_block | NEWLINE)* ~ EOI }
+
+test_start = { "TEST" }
+test_name  = { (!"\n" ~ ANY)+ }
+test_end   = { "END" }
+
+// HTTP method + URL
+request = { method ~ url ~ NEWLINE ~ headers ~ NEWLINE? ~ body? ~ NEWLINE*}
+method  = { "GET" | "POST" | "PUT" | "DELETE" | "PATCH" }
+url     = { (!"\n" ~ ANY)+ }
+
+// --- Headers ---
+STOP_HEADER = { NEWLINE | "BODY" }
+headers     = { (!STOP_HEADER ~ header ~ NEWLINE)* }
+
+header       = { header_key ~ ":" ~ WHITESPACE* ~ header_value }
+header_key   = { (!":" ~ ANY)+ }
+header_value = { (!NEWLINE ~ ANY)+ }
+
+// --- Body ---
+body_start   = { "BODY" }
+body_end     = { "BODYEND" }
+body_content = { (!(body_end) ~ ANY)* }
+body         = { body_start ~ NEWLINE+ ~ body_content ~ body_end }
+
+// Refined Expects
+expects = {(expect)*}
+// --- Core Expectations ---
+expect = { "EXPECT" ~ expect_expr ~ NEWLINE+ }
+
+// The order here matters: put more specific patterns (like BETWEEN) 
+// before simpler ones (like unary paths).
+expect_expr = {
+      binary_op 
+    | between_op
+    | in_op
+    | exists_op
+    | unary_path
+}
+
+// --- Operation Definitions ---
+
+// Covers: ==, !=, >, <, >=, <=
+binary_op = { path ~ operator ~ value }
+operator  = { "==" | "!=" | ">=" | "<=" | ">" | "<" }
+
+// Covers: status IN [200, 201]
+in_op = { path ~ "IN" ~ "[" ~ value ~ ("," ~ value)* ~ "]" }
+
+// Covers: body.age BETWEEN 18 AND 65
+between_op = { path ~ "BETWEEN" ~ value ~ "AND" ~ value }
+
+// Covers: body.email EXISTS
+exists_op = { path ~ "EXISTS" }
+
+// Covers: body.active (implicitly checks if true/exists)
+unary_path = { path }
+
+// --- Atoms ---
+
+path = @{ (ASCII_ALPHANUMERIC | "_" | "." | "-")+ }
+
+value = { quoted_string | boolean | number }
+quoted_string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+boolean       = { "true" | "false" }
+number        = { ASCII_DIGIT+ }
+
+
+
+test_block = {
+    test_start ~ test_name? ~ NEWLINE 
+    ~ request 
+    ~ expects
+    ~ test_end
+}

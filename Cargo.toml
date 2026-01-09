@@ -1,0 +1,27 @@
+[package]
+name = "axotly"
+version = "0.1.0"
+edition = "2021"
+description = "A fast, reliable, and expressive API testing tool designed for developer happiness."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/JapArt/axotly"
+homepage = "https://axotly.com"
+keywords = ["api", "testing", "http", "cli", "dsl"]
+categories = ["development-tools::testing", "command-line-utilities"]
+
+[[bin]]
+name = "axotly"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0"
+walkdir = "2"
+clap = { version = "4", features = ["derive"] }
+reqwest = { version = "0.13", features = ["json"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+owo-colors = "4"
+url = "2"
+serde_json = "1"
+pest = "2"
+pest_derive = "2"

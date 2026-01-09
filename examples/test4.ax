@@ -1,0 +1,63 @@
+TEST GET request with query
+  GET https://httpbin.org/get?name=Juan&role=admin
+
+  EXPECT status == 200
+  EXPECT body.args.name == "Juan"
+  EXPECT body.args.role == "admin"
+END
+
+TEST POST create a resource
+  POST https://httpbin.org/post
+  Content-Type: application/json
+
+  BODY 
+  {
+    "name": "Axotly",
+    "role": "tester"
+  }
+  BODYEND
+  
+  EXPECT status == 200
+  EXPECT body.name == "Axotly"
+  EXPECT body.role == "tester"
+END
+
+TEST PUT update a resource
+  PUT https://httpbin.org/put
+  
+  BODY 
+  {
+    "role": "editor"
+  }
+  BODYEND
+  
+  EXPECT status == 200
+  EXPECT body.role == "editor"
+END
+
+TEST PATCH partial update
+  PATCH https://httpbin.org/patch
+
+  BODY 
+  {
+    "active": true
+  }
+  BODYEND
+  
+  EXPECT status == 200
+  EXPECT body.active == true
+END
+
+TEST DELETE a resource
+  DELETE https://httpbin.org/delete
+  
+  EXPECT status == 200
+END
+
+TEST GET with headers
+  GET https://httpbin.org/headers
+  Authorization: Bearer abc123
+  
+  EXPECT status == 200
+  EXPECT body.headers.Authorization == "Bearer abc123"
+END
