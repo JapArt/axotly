@@ -4,6 +4,7 @@
 
 Axotly is a modern API testing tool built for developers who value clarity, speed, and confidence. It lets you write readable, declarative tests for HTTP and GraphQL APIs using a purpose-built DSL that focuses on *what* you expect, not *how* to assert it.
 
+![Axotly demo](./axotly-demo.gif)
 ---
 
 ## How to use
