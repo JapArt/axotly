@@ -8,45 +8,51 @@ Inspired by the axolotl — resilient, expressive, and adaptable — Axotly aims
 
 ---
 
-## Why Axotly?
+## How to use
 
-Most API testing tools either:
+```
+/// Assuming you have a folder `examples/` with Axotly test files:
 
-- Feel too low-level and verbose
-- Blur the line between tests and scripts
-- Are slow, flaky, or hard to reason about
+> axotly -f examples
 
-Axotly is different.
+Axotly — API tests
+Running 22 tests...
 
-### ✨ Core Principles
+examples/test2.ax
+✓ GET request with query (660ms)
+✗ POST create a resource (687ms)
+✗ PUT update a resource (863ms)
+✗ PATCH partial update (1.07s)
+✓ DELETE a resource (659ms)
+✓ GET with headers (1.38s)
 
-- **Expressive DSL** – Tests read like specifications
-- **Fast by default** – Minimal overhead with concurrent test execution
-- **Deterministic** – No hidden magic, no shared mutable state
-- **Local-first** – Runs entirely on your machine, no logins or accounts required
-- **Developer-first** – Clear failures, clean output, simple mental model
+────────────────────────────────────
+Results
+✓ Passed: 3
+✗ Failed: 3
+⏱ Duration: 4.17s
+────────────────────────────────────
 
----
+Failures
 
-## Features
+1) POST create a resource (687ms)
+  - Path 'body.name' not found
+  - Path 'body.role' not found
 
-- 🚀 HTTP API testing (REST)
-- 🧪 Declarative expectations
-- 📦 JSON body assertions
-- 🧠 Clear, actionable failure reports
-- ⚡ Designed for CI and local workflows
+2) PUT update a resource (863ms)
+  - Path 'body.role' not found
 
-Planned / in progress:
+3) PATCH partial update (1.07s)
+  - Path 'body.active' not found
 
-- GraphQL support
-- Variables & value extraction
-- Richer reports (JSON / HTML)
+Completed in: 1.42s
+```
 
 ---
 
 ## Test Files & Project Structure
 
-Axotly tests are written in plain text ``\*\* files\*\*.
+Axotly tests are written in plain text ``\*\* files\*\* with the .ax extension.
 
 - Tests live alongside your code
 - Files can be organized into **folders and subfolders**
@@ -79,17 +85,63 @@ Axotly will automatically discover and run all `.ax` files under the given direc
 A simple Axotly test looks like this:
 
 ```axotly
-TEST "Get user"
-  GET https://api.example.com/users/1
+TEST POST create a resource
+  POST https://httpbin.org/post
+  Content-Type: application/json
 
+  BODY 
+  {
+    "name": "Axotly",
+    "role": "tester"
+  }
+  BODYEND
+  
   EXPECT status == 200
-  EXPECT body.name == "Juan"
-  EXPECT body.role == "admin"
-  EXPECT body.active == true
+  EXPECT body.name == "Axotly"
+  EXPECT body.role == "tester"
 END
 ```
 
-Readable. Predictable. No glue code.
+You can find more examples in the `examples/` folder of the repository.
+
+---
+
+## Why Axotly?
+
+Axotly is different.
+
+Most API testing tools either:
+
+- Grow into heavy, stateful workspaces that are hard to version and automate
+- Or stay so low-level that even simple tests become repetitive and error-prone
+
+Axotly is the middle ground.
+
+The simplicity of curl, with the structure and assertions needed for real API testing.
+
+### ✨ Core Principles
+
+- **Expressive DSL** – Tests read like specifications
+- **Fast by default** – Minimal overhead with concurrent test execution
+- **Deterministic** – No hidden magic, no shared mutable state
+- **Local-first** – Runs entirely on your machine, no logins or accounts required
+- **Developer-first** – Clear failures, clean output, simple mental model
+
+---
+
+## Features
+
+- 🚀 HTTP API testing (REST)
+- 🧪 Declarative expectations
+- 📦 JSON body assertions
+- 🧠 Clear, actionable failure reports
+- ⚡ Designed for CI and local workflows
+
+Planned / in progress:
+
+- GraphQL support
+- Variables & value extraction
+- Richer reports (JSON / HTML)
 
 ---
 
@@ -151,7 +203,7 @@ Axotly is already being used locally and in development workflows, and your inpu
 The immediate focus is on features that make Axotly practical for real-world teams and CI pipelines:
 
 - **Variables in the DSL** – Reuse values, parameterize requests, and reduce duplication
-- ``\*\* support\*\* – Environment-based configuration for local, staging, and production setups
+- \*\* support\*\* – Environment-based configuration for local, staging, and production setups
 - **CI integration** – First-class support for running Axotly in automated pipelines
 
 These improvements will keep Axotly simple while making it production-ready.
@@ -171,8 +223,6 @@ You are free to:
 Attribution is appreciated ❤️
 
 ---
-
-
 
 ## Philosophy
 
