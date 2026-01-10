@@ -84,18 +84,18 @@ Axotly will automatically discover and run all `.ax` files under the given direc
 A simple Axotly test looks like this:
 
 ```axotly
-TEST POST create a resource
-  POST https://httpbin.org/post
-  Content-Type: application/json
+TEST Create a resource           <--- Test name
+  POST https://httpbin.org/post  <--- Request (METHOD url)
+  Content-Type: application/json <--- Headers, one on each line
 
-  BODY 
+  BODY                           <--- Body of the request 
   {
     "name": "Axotly",
     "role": "tester"
   }
   BODYEND
   
-  EXPECT status == 200
+  EXPECT status == 200          <--- Expects, one on each line
   EXPECT body.name == "Axotly"
   EXPECT body.role == "tester"
 END
