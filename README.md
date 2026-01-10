@@ -203,7 +203,7 @@ Axotly is already being used locally and in development workflows, and your inpu
 The immediate focus is on features that make Axotly practical for real-world teams and CI pipelines:
 
 - **Variables in the DSL** – Reuse values, parameterize requests, and reduce duplication
-- \*\* support\*\* – Environment-based configuration for local, staging, and production setups
+- **Environment-based support** – Environment-based configuration for local, staging, and production setups
 - **CI integration** – First-class support for running Axotly in automated pipelines
 
 These improvements will keep Axotly simple while making it production-ready.
