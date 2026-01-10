@@ -52,7 +52,7 @@ Completed in: 1.42s
 
 ## Test Files & Project Structure
 
-Axotly tests are written in plain text ``\*\* files\*\* with the .ax extension.
+Axotly tests are written in plain text \*\* files\*\* with the .ax extension.
 
 - Tests live alongside your code
 - Files can be organized into **folders and subfolders**
