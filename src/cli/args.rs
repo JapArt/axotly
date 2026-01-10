@@ -4,10 +4,9 @@ use crate::cli::RendererKind;
 #[derive(Parser, Debug)]
 #[command(
     name = "axotly",
-    about = "Minimal API testing tool",
+    about = "Fast, reliable, and expressive API testing — designed for developer happiness.",
     group(
         ArgGroup::new("input")
-            .required(true)
             .args(["file", "url"])
     )
 )]
@@ -18,30 +17,38 @@ pub struct Cli {
 
     #[arg(short, long, default_value = "human", requires = "file")]
     pub renderer: RendererKind,
-    
+
     /// Number of concurrent requests (min: 1, default: CPU cores)
     #[arg(
-        short, 
-        long, 
+        short,
+        long,
         requires = "file",
-        default_value_t = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(1),
+        default_value_t = std::thread::available_parallelism()
+            .map(|n| n.get())
+            .unwrap_or(1),
         value_parser = clap::builder::RangedI64ValueParser::<usize>::new().range(1..200)
     )]
     pub concurrently: usize,
 
-    /// Run file requests concurrently (parallel)
-    #[arg(long, requires = "file")]
-    pub async_mode: bool,
-
-    /// The URL to fetch (ignored if --file is used)
-    #[arg(short, long, default_value = "http://httpbin.org/get")]
-    pub url: String,
+    /// URL to fetch (positional, curl-style)
+    #[arg(
+        value_name = "URL",
+        default_value = "http://httpbin.org/get",
+        conflicts_with = "file"
+    )]
+    pub url: Option<String>,
 
     /// HTTP method (get, post, put, delete, patch)
-    #[arg(short, long, default_value = "get")]
+    #[arg(short, long, default_value = "GET")]
     pub method: String,
 
-    /// Request body
-    #[arg(short, long, conflicts_with = "file")]
+    /// Body for request
+    #[arg(short, long)]
     pub body: Option<String>,
+
+    /// Json body request
+    #[arg(short = 'j', long)]
+    pub json: Option<String>,
+
 }
+
