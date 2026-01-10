@@ -16,7 +16,7 @@ Inspired by the axolotl — resilient, expressive, and adaptable — Axotly aims
 > axotly -f examples
 
 Axotly — API tests
-Running 22 tests...
+Running 6 tests...
 
 examples/test2.ax
 ✓ GET request with query (660ms)
