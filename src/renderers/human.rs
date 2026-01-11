@@ -78,25 +78,6 @@ impl Renderer for HumanRenderer {
             }
         }
 
-        println!("\n{}", "────────────────────────────────────".dimmed());
-        println!("{}", "Results".bold());
-        println!(
-            "{} {}",
-            "✓ Passed:".green(),
-            passed.to_string().green().bold()
-        );
-        println!(
-            "{} {}",
-            "✗ Failed:".red(),
-            failed.to_string().red().bold()
-        );
-        println!(
-            "{} {}",
-            "⏱ Duration:".cyan(),
-            Self::fmt_duration(&total).cyan().bold()
-        );
-        println!("{}", "────────────────────────────────────".dimmed());
-
         if failed > 0 {
             println!("\n{}", "Failures".red().bold());
 
@@ -125,8 +106,28 @@ impl Renderer for HumanRenderer {
                 }
             }
         }
+        
+        println!("\n{}", "────────────────────────────────────".dimmed());
+        println!("{}", "Results".bold());
         println!(
-            "Completed in: {}",
+            "{} {}",
+            "✓ Passed:".green(),
+            passed.to_string().green().bold()
+        );
+        println!(
+            "{} {}",
+            "✗ Failed:".red(),
+            failed.to_string().red().bold()
+        );
+        println!(
+            "{} {}",
+            "⏱ Total requests duration:".magenta(),
+            Self::fmt_duration(&total).magenta().bold()
+        );
+        println!("{}", "────────────────────────────────────".dimmed());
+        
+        println!(
+            "Test suite completed in: {}",
             format!("{:.2?}", total_duration).bold()
         );
     }
