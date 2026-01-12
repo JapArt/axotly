@@ -109,16 +109,9 @@ You can find more examples in the `examples/` folder of the repository.
 
 Axotly is different.
 
-Most API testing tools either:
+We try to use the simplicity of curl, with the structure and assertions needed for real API testing.
 
-- Grow into heavy, stateful workspaces that are hard to version and automate
-- Or stay so low-level that even simple tests become repetitive and error-prone
-
-Axotly is the middle ground.
-
-The simplicity of curl, with the structure and assertions needed for real API testing.
-
-### ✨ Core Principles
+### Core Principles
 
 - **Expressive DSL** – Tests read like specifications
 - **Fast by default** – Minimal overhead with concurrent test execution
@@ -130,11 +123,11 @@ The simplicity of curl, with the structure and assertions needed for real API te
 
 ## Features
 
-- 🚀 HTTP API testing (REST)
-- 🧪 Declarative expectations
-- 📦 JSON body assertions
-- 🧠 Clear, actionable failure reports
-- ⚡ Designed for CI and local workflows
+- HTTP API testing (REST)
+- Declarative expectations
+- JSON body assertions
+- Clear, actionable failure reports
+- Designed for CI and local workflows
 
 Planned / in progress:
 
