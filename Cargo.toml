@@ -1,6 +1,6 @@
 [package]
 name = "axotly"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "A fast, reliable, and expressive API testing tool designed for developer happiness."
 license = "MIT"
