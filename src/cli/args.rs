@@ -30,6 +30,10 @@ pub struct Cli {
     )]
     pub concurrently: usize,
 
+    /// Show responses 
+    #[arg(long, requires="file")]
+    pub show_response: bool,
+
     /// URL to fetch (positional, curl-style)
     #[arg(
         value_name = "URL",

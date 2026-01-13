@@ -4,6 +4,7 @@ use anyhow::{Result, Context};
 
 use crate::domain::test_case::TestCase;
 use crate::domain::renderer::Renderer;
+use crate::renderers::response::ResponseRenderer;
 use crate::executor::Executor;
 use crate::parser::AxParser;
 use owo_colors::OwoColorize;
@@ -16,6 +17,7 @@ impl Runner {
         path: P,
         max_concurrency: usize,
         renderer: &dyn Renderer,
+        show_response: bool,
     ) -> Result<()> {
         let path = path.as_ref();
 
@@ -54,6 +56,11 @@ impl Runner {
             let results = Executor::run_tests(tests, max_concurrency).await;
             for test in &results {
                 renderer.test(test, None);
+                if show_response {
+                    if let Some(resp) = &test.response {
+                        ResponseRenderer::print_response(resp);
+                    }
+                }
             }
             all_results.extend(results);
         }

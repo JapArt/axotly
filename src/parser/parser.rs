@@ -67,8 +67,14 @@ pub fn parse_http_request(pair: Pair<Rule>) -> Result<HttpRequest> {
                   headers.insert(key, value);
               }
             }
-            Rule::body_content => {
-                body = Some(Body::Text(inner.as_str().to_string()));
+
+            Rule::body => {
+                for body_inner in inner.into_inner() {
+                    if body_inner.as_rule() == Rule::body_content {
+                        let text = body_inner.as_str().to_string();
+                        body = Some(Body::Text(text));
+                    }
+                }
             }
             _ => {}
         }
@@ -176,7 +182,6 @@ fn parse_value(pair: Pair<Rule>) -> Result<Value> {
 
 pub fn parse_test_block(pair: Pair<Rule>) -> Result<TestCase> {
     debug_assert_eq!(pair.as_rule(), Rule::test_block);
-
     let mut name: Option<String> = None;
     let mut request: Option<HttpRequest> = None;
     let mut assertions: Vec<Assertion> = Vec::new();

@@ -29,7 +29,13 @@ async fn main() -> Result<()> {
 
     if let Some(path) = args.file {
         let max_concurrency = args.concurrently;
-        Runner::run_path(path, max_concurrency, renderer.as_ref()).await?;
+        let show_response = args.show_response;
+        Runner::run_path(
+            path, 
+            max_concurrency, 
+            renderer.as_ref(), 
+            show_response)
+        .await?;
         return Ok(());
     }
 

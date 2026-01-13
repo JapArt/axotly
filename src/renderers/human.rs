@@ -1,4 +1,5 @@
 use crate::domain::{TestCase, TestResult, Renderer};
+use crate::renderers::response::ResponseRenderer;
 use std::time::Duration;
 use owo_colors::OwoColorize;
 use std::path::PathBuf;
@@ -100,6 +101,10 @@ impl Renderer for HumanRenderer {
                             "-".red(),
                             error.message
                         );
+                    }
+
+                    if let Some(response) = &test.response {
+                       ResponseRenderer::print_response(response);
                     }
 
                     idx += 1;
