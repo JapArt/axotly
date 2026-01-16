@@ -2,14 +2,57 @@
 
 **Fast, reliable, and expressive API testing — designed for developer happiness.**
 
-Axotly is a modern API testing tool built for developers who value clarity, speed, and confidence. It lets you write readable, declarative tests for HTTP and GraphQL APIs using a purpose-built DSL that focuses on *what* you expect, not *how* to assert it.
+Axotly is a fast, developer-first CLI tool for testing HTTP (and future GraphQL) APIs using a clear, declarative DSL. Tests focus on what you expect from an API rather than how to assert it, making them readable, diff-friendly, and easy to review.
+
+Tests are written in plain .ax files, organized in folders alongside your code. Axotly automatically discovers and runs them concurrently, producing clear pass/fail output with actionable error messages. It’s designed to feel like curl with structure—simple, deterministic, and local-first.
+
+Key features include REST API testing, JSON assertions and expressive expectations. Planned features include GraphQL support, variables, environment configuration, and CI integrations.
+
+Axotly is a Rust-based CLI (installed via Cargo), runs entirely locally with no accounts required, and is currently in Beta. It’s open source under the MIT license and focused on one goal: making API behavior explicit, testable, and trustworthy.
 
 ![Axotly demo](./demo.gif)
+---
+
+---
+
+## Installation
+
+Axotly is distributed as a Rust CLI.
+
+### Prerequisites
+
+- Rust (1.75+)
+- Cargo
+
+If you don’t have Rust installed, get it from [https://rustup.rs](https://rustup.rs)
+
+### Install with Cargo
+
+```bash
+cargo install axotly
+```
+
+Once installed, verify it works:
+
+```bash
+axotly --help
+```
+
+### Install for Linux x86_64
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/JapArt/axotly/main/install.sh | bash
+
+```
+
+Axotly runs completely locally. No accounts, no logins, no network calls beyond the APIs you test.
+
 ---
 
 ## How to use
 
 ```
+
 /// Assuming you have a folder `examples/` with Axotly test files:
 
 > axotly -f examples
@@ -25,26 +68,29 @@ examples/test2.ax
 ✓ DELETE a resource (659ms)
 ✓ GET with headers (1.38s)
 
+Failures
+
+1) POST create a resource (687ms)
+
+- Path 'body.name' not found
+- Path 'body.role' not found
+
+2) PUT update a resource (863ms)
+
+- Path 'body.role' not found
+
+3) PATCH partial update (1.07s)
+
+- Path 'body.active' not found
+
 ────────────────────────────────────
 Results
 ✓ Passed: 3
 ✗ Failed: 3
 ⏱ Duration: 4.17s
 ────────────────────────────────────
-
-Failures
-
-1) POST create a resource (687ms)
-  - Path 'body.name' not found
-  - Path 'body.role' not found
-
-2) PUT update a resource (863ms)
-  - Path 'body.role' not found
-
-3) PATCH partial update (1.07s)
-  - Path 'body.active' not found
-
 Completed in: 1.42s
+
 ```
 
 ---
@@ -66,6 +112,7 @@ This makes it easy to:
 A typical structure might look like:
 
 ```
+
 api-tests/
   users/
     get_user.ax
@@ -73,6 +120,7 @@ api-tests/
   auth/
     login.ax
     refresh_token.ax
+
 ```
 
 Axotly will automatically discover and run all `.ax` files under the given directory.
@@ -107,9 +155,7 @@ You can find more examples in the `examples/` folder of the repository.
 
 ## Why Axotly?
 
-Axotly is different.
-
-We try to use the simplicity of curl, with the structure and assertions needed for real API testing.
+This is a personal project aimed to use the simplicity of curl, with the structure and assertions needed for real API testing.
 
 ### Core Principles
 
@@ -117,64 +163,7 @@ We try to use the simplicity of curl, with the structure and assertions needed f
 - **Fast by default** – Minimal overhead with concurrent test execution
 - **Deterministic** – No hidden magic, no shared mutable state
 - **Local-first** – Runs entirely on your machine, no logins or accounts required
-- **Developer-first** – Clear failures, clean output, simple mental model
-
----
-
-## Features
-
-- HTTP API testing (REST)
-- Declarative expectations
-- JSON body assertions
-- Clear, actionable failure reports
-- Designed for CI and local workflows
-
-Planned / in progress:
-
-- GraphQL support
-- Variables & value extraction
-- Richer reports (JSON / HTML)
-
----
-
-## How It Works
-
-- Axotly scans your project for test files
-- Each test is parsed into a request + expectations
-- Requests are executed concurrently when possible
-- Expectations are evaluated against each response
-- Results are rendered immediately with clear feedback
-
-Fast execution is achieved without sacrificing determinism.
-
-No shared state. No implicit retries. No surprises.
-
----
-
-## Installation
-
-Axotly is distributed as a Rust CLI.
-
-### Prerequisites
-
-- Rust (1.75+)
-- Cargo
-
-If you don’t have Rust installed, get it from [https://rustup.rs](https://rustup.rs)
-
-### Install with Cargo
-
-```bash
-cargo install axotly
-```
-
-Once installed, verify it works:
-
-```bash
-axotly --help
-```
-
-> Axotly runs completely locally. No accounts, no logins, no network calls beyond the APIs you test.
+- **Developer-friendly** – Clear failures, clean output, simple mental model
 
 ---
 
@@ -216,20 +205,6 @@ Attribution is appreciated ❤️
 
 ---
 
-## Philosophy
-
-Axotly is not trying to be:
-
-- A browser automation tool
-- A general-purpose scripting framework
-- A replacement for unit tests
-
-It *is* focused on one thing:
-
-> **Making API behavior explicit, testable, and trustworthy.**
-
----
-
 ## Contributing
 
 Contributions, ideas, and feedback are welcome.
@@ -244,13 +219,7 @@ Please keep discussions constructive and developer-focused.
 
 ## Name & Inspiration
 
-**Axotly** is inspired by the *axolotl*, a unique animal known for its ability to regenerate and adapt.
-
-Like the axolotl, Axotly aims to:
-
-- Be resilient
-- Stay simple
-- Adapt as your API evolves
+**Axotly** is inspired by the *axolotl*, a unique animal known for its ability to regenerate and adapt. I used to have one.
 
 ---
 
