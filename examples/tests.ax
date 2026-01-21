@@ -1,0 +1,71 @@
+TEST Binary assertion equals
+GET https://httpbin.org/get
+
+EXPECT status == 200
+END
+
+TEST Binary assertion not equals
+GET https://httpbin.org/status/404
+
+EXPECT status != 200
+END
+
+TEST Binary assertion greater than
+GET https://httpbin.org/get
+
+EXPECT status > 199
+END
+
+TEST Binary assertion less than
+GET https://httpbin.org/status/300
+
+EXPECT status < 400
+END
+
+TEST Binary assertion greater or equal
+GET https://httpbin.org/get
+
+EXPECT status >= 200
+END
+
+TEST Binary assertion less or equal
+GET https://httpbin.org/get
+
+EXPECT status <= 200
+END
+
+TEST Binary assertion string equals
+GET https://httpbin.org/get
+
+EXPECT body.url == "https://httpbin.org/get"
+END
+
+TEST Binary assertion boolean true
+GET https://httpbin.org/get
+
+EXPECT body.url EXISTS
+END
+
+TEST In assertion
+GET https://httpbin.org/status/201
+
+EXPECT status IN [200, 201, 202]
+END
+
+TEST Between assertion
+GET https://httpbin.org/get
+
+EXPECT status BETWEEN 199 AND 300
+END
+
+TEST Exists assertion
+GET https://httpbin.org/get
+
+EXPECT body.url EXISTS
+END
+
+TEST Unary path assertion
+GET https://httpbin.org/get
+
+EXPECT body.url
+END
