@@ -11,5 +11,19 @@ TEST POST create a resource
   
   EXPECT status == 200
   EXPECT body.json.name == "Axotly"
-  EXPECT body.json.role == "tester"
+  EXPECT body.json.role == "admin"
+END
+
+TEST get a resource
+  POST https://httpbin.org/post
+  Content-Type: application/json
+
+  BODY
+  {
+    "name": "Axotly",
+    "role": "tester"
+  }
+  BODYEND
+  
+  EXPECT status == 200
 END
