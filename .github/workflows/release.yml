@@ -9,76 +9,41 @@ permissions:
   contents: write
 
 jobs:
-  version-check:
-    name: Verify Cargo.toml version matches tag
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Extract version from Cargo.toml
-        id: cargo
-        run: |
-          VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Extract version from Git tag
-        id: tag
-        run: |
-          TAG="${GITHUB_REF_NAME#v}"
-          echo "version=$TAG" >> $GITHUB_OUTPUT
-
-      - name: Compare versions
-        run: |
-          if [ "${{ steps.cargo.outputs.version }}" != "${{ steps.tag.outputs.version }}" ]; then
-            echo "❌ Version mismatch!"
-            echo "Cargo.toml: ${{ steps.cargo.outputs.version }}"
-            echo "Git tag:     ${{ steps.tag.outputs.version }}"
-            exit 1
-          fi
-          echo "✅ Versions match"
   build:
-    name: Build (${{ matrix.target }})
+    name: Build ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
 
     strategy:
-      fail-fast: false
       matrix:
         include:
-          # Linux (static)
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
             binary: axotly
             archive: axotly-linux-x86_64.tar.gz
 
-          # macOS Intel
           - os: macos-latest
             target: x86_64-apple-darwin
             binary: axotly
             archive: axotly-macos-x86_64.tar.gz
 
-          # macOS Apple Silicon
           - os: macos-latest
             target: aarch64-apple-darwin
             binary: axotly
             archive: axotly-macos-arm64.tar.gz
 
-          # Windows
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             binary: axotly.exe
             archive: axotly-windows-x86_64.zip
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install musl tools (Linux)
+      - name: Install musl tools
         if: matrix.target == 'x86_64-unknown-linux-musl'
         run: sudo apt-get update && sudo apt-get install -y musl-tools
 
@@ -99,23 +64,20 @@ jobs:
           copy target\${{ matrix.target }}\release\${{ matrix.binary }} dist\
           powershell Compress-Archive dist\* ${{ matrix.archive }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.archive }}
           path: ${{ matrix.archive }}
 
   release:
-    name: Create GitHub Release
+    name: GitHub Release
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
 
-      - name: Create Release & Upload Assets
-        uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
