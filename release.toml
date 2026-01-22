@@ -1,0 +1,4 @@
+sign-tag = false
+tag-name = "v{{version}}"
+push = true
+publish = true
