@@ -1,3 +1,46 @@
+//! Test discovery and execution orchestration.
+//!
+//! This module defines the [`Runner`], the high-level coordinator responsible
+//! for discovering `.ax` test files, parsing them into [`TestCase`]s, executing
+//! them with controlled concurrency, and rendering results.
+//!
+//! The runner acts as the glue between:
+//!
+//! - **Input**: a single `.ax` file or a directory containing multiple files
+//! - **Parsing**: converting `.ax` files into executable [`TestCase`]s
+//! - **Execution**: delegating concurrent execution to the [`Executor`]
+//! - **Rendering**: streaming test results and final summaries via a [`Renderer`]
+//!
+//! ## Responsibilities
+//!
+//! - Walk directories recursively to discover `.ax` files
+//! - Load and parse tests per file
+//! - Execute tests with bounded concurrency
+//! - Render results incrementally as tests complete
+//! - Produce a final summary across all executed tests
+//!
+//! The runner itself is intentionally stateless and does not retain global
+//! execution context. All state is scoped to a single invocation.
+//!
+//! ## Execution flow
+//!
+//! 1. Determine whether the provided path is a file or directory.
+//! 2. Discover all `.ax` files (recursively for directories).
+//! 3. Parse each file into a list of [`TestCase`]s.
+//! 4. Initialize the renderer and start timing.
+//! 5. Execute tests file-by-file using the [`Executor`].
+//! 6. Render each test result as it completes.
+//! 7. Emit a final summary with aggregated results and duration.
+//!
+//! ## Output behavior
+//!
+//! - Test results are rendered immediately after execution.
+//! - File boundaries are printed to provide visual grouping.
+//! - Optional HTTP responses can be printed when `show_response` is enabled.
+//!
+//! Errors while reading or parsing files are surfaced immediately and stop
+//! execution.
+
 use std::path::Path;
 use walkdir::WalkDir;
 use anyhow::{Result, Context};
